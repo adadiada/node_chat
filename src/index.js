@@ -4,6 +4,8 @@ import path from 'path';
 import cors from 'cors';
 import { WebSocketServer } from 'ws';
 import { v4 as uuid } from 'uuid';
+import { usersRouter } from './server/routers/userRouter.js';
+import { roomsRouter } from './server/routers/roomsRouter.js';
 
 const PORT = process.env.PORT || 3005;
 const app = express();
@@ -11,6 +13,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(process.cwd(), 'public')));
+
+app.use('/users', usersRouter);
+app.use('/rooms', roomsRouter);
 
 const server = app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}/`);
