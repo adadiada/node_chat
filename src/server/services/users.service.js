@@ -8,7 +8,7 @@ const getById = (id) => {
   return users.find((u) => u.id === +id) || null;
 };
 
-export const userService = {
+export const usersService = {
   getAll,
   getById,
 };
