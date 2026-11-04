@@ -1,4 +1,4 @@
-import { roomsService } from '../services/rooms.service.js';
+import { roomsService } from './../services/rooms.service.js';
 
 const getAll = (req, res) => {
   return res.json(roomsService.getAll());

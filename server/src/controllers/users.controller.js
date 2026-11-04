@@ -1,4 +1,4 @@
-import { usersService } from '../services/users.service.js';
+import { usersService } from './../services/users.service.js';
 
 const getAll = (req, res) => {
   return res.json(usersService.getAll());

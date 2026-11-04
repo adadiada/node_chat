@@ -4,8 +4,8 @@ import path from 'path';
 import cors from 'cors';
 import { WebSocketServer } from 'ws';
 import { v4 as uuid } from 'uuid';
-import { usersRouter } from './server/routers/usersRouter.js';
-import { roomsRouter } from './server/routers/roomsRouter.js';
+import { usersRouter } from './routers/usersRouter.js';
+import { roomsRouter } from './routers/roomsRouter.js';
 
 const PORT = process.env.PORT || 3005;
 const app = express();
