@@ -2,7 +2,7 @@
 
 ## Front-End
 
-1. `cd client/`
+1. `cd client/` //
 2. `npm i`
 3. `npm start`
 4. відкриється `localhost:5173`, це Front-End
