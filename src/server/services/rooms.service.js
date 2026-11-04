@@ -9,13 +9,14 @@ const getById = (id) => {
   return rooms.find((room) => room.id === +id) || null;
 };
 
-const createRoom = async ({ name, userId }) => {
+const createRoom = async ({ name, userName }) => {
   const room = {
     id: Date.now(),
     name,
     messages: [],
-    users: [userId],
+    userName,
   };
+
   rooms.push(room);
 
   return room;

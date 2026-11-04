@@ -16,41 +16,35 @@ const getById = (req, res) => {
 };
 
 const create = async (req, res) => {
-  const { name, userId } = req.body;
+  const { name, userName } = req.body;
 
-  if (!userId || !name) {
-    return res.status(400).send({ message: 'Bad request' });
-  }
-  // Перевірка чи існує користувач
-
-  const room = roomsService.getById(userId);
-
-  if (!room) {
-    return res.status(400).send({ message: 'Bad request' });
+  if (!userName || !name) {
+    return res.status(400).send({ message: 'Need write name and username' });
   }
 
-  const roomCreate = roomsService.create({
-    userId,
+  const roomCreate = await roomsService.create({
+    userName,
     name,
   });
 
   if (!roomCreate) {
-    return res.status(404).send({ message: 'Not found' });
+    return res.status(404).send({ message: 'Create room' });
   }
+  console.log('roomCreate', roomCreate);
 
-  res.status(201).json(roomCreate);
+  return res.status(201).json(roomCreate);
 };
 
 const upDate = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    return res.status(400).send({ message: 'Bad request' });
+    return res.status(400).send({ message: 'Updata name' });
   }
 
   const newRoom = roomsService.create(name);
 
-  res.status(201).json(newRoom);
+  return res.status(201).json(newRoom);
 };
 
 const deletedRoomById = (req, res) => {

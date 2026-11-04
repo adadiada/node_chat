@@ -16,6 +16,9 @@ app.use(express.static(path.join(process.cwd())));
 
 app.use('/user', usersRouter);
 app.use('/room', roomsRouter);
+app.use('/', (req, res) => {
+  res.send('Hello');
+});
 
 const server = app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}/`);
@@ -23,13 +26,11 @@ const server = app.listen(PORT, () => {
 
 const wss = new WebSocketServer({ server });
 
-const rooms = {
-  'room-id': { name: 'General', messages: [] }, //зберігаю повідомлення разом з кімнатою
-};
+const rooms = [{ id: 'room-1', name: 'genel-chat' }];
 
-wss.on('connection', (ws) => {
-  ws.on('message', (message) => {
-    const data = JSON.parse(message);
+wss.on('connection', (connection) => {
+  connection.on('message', (text) => {
+    const data = JSON.parse(text);
 
     switch (data.type) {
       case 'setUsername':
@@ -50,6 +51,11 @@ wss.on('connection', (ws) => {
           text: data.text,
           time: data.time,
         });
+        for (const client of wss.clients) {
+          if (client.roomId === data.roomId) {
+            client.send(JSON.stringify(data));
+          }
+        }
         break;
 
       case 'joinRoom':
@@ -60,6 +66,17 @@ wss.on('connection', (ws) => {
             messages: rooms[data.roomId].messages,
           }),
         );
+        break;
+
+      case 'renameRoom':
+        const roomRename = rooms[data.roomId]; //знаходиш кімнату по roomId взяти roomId з data
+        if (!roomRename) break; //знайти кімнату в rooms
+        room.name = data.name;
+        break;
+
+      case 'deleteRoom':
+        const room = rooms[data.roomId]; //знаходиш кімнату по roomId
+        delete rooms[data.roomId];
         break;
     }
   });
