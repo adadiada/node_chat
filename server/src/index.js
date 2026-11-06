@@ -2,9 +2,11 @@
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
+import 'dotenv/config';
+
 import { WebSocketServer } from 'ws';
-import { v4 as uuid } from 'uuid';
-import { usersRouter } from './routers/usersRouter.js';
+// import { v4 as uuid } from 'uuid';
+// import { usersRouter } from './routers/usersRouter.js';
 import { roomsRouter } from './routers/roomsRouter.js';
 
 const PORT = process.env.PORT || 3005;
@@ -14,22 +16,26 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(process.cwd())));
 
-app.use('/user', usersRouter);
+// app.use('/user', usersRouter);
 app.use('/room', roomsRouter);
-app.use('/', (req, res) => {
-  res.send('Hello');
-});
+// app.use('/');
 
 const server = app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}/`);
 });
 
 const wss = new WebSocketServer({ server });
+const rooms = [
+  {
+    'room-1': {
+      name: 'genel-chat',
+      messages: [],
+    },
+  },
+];
 
-const rooms = [{ id: 'room-1', name: 'genel-chat' }];
-
-wss.on('connection', (connection) => {
-  connection.on('message', (text) => {
+wss.on('connection', (ws) => {
+  ws.on('message', (text) => {
     const data = JSON.parse(text);
 
     switch (data.type) {

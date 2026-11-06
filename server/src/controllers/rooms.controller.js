@@ -15,15 +15,15 @@ const getById = (req, res) => {
   return res.json(room);
 };
 
-const create = async (req, res) => {
-  const { name, userName } = req.body;
+const createRoom = async (req, res) => {
+  const { name } = req.body;
+  console.log('create room', req.body);
 
-  if (!userName || !name) {
-    return res.status(400).send({ message: 'Need write name and username' });
+  if (!name) {
+    return res.status(400).send({ message: 'Name is required' });
   }
 
-  const roomCreate = await roomsService.create({
-    userName,
+  const roomCreate = await roomsService.createRoom({
     name,
   });
 
@@ -35,33 +35,38 @@ const create = async (req, res) => {
   return res.status(201).json(roomCreate);
 };
 
-const upDate = (req, res) => {
+const upDateRoom = async (req, res) => {
+  const { id } = req.params;
   const { name } = req.body;
 
   if (!name) {
-    return res.status(400).send({ message: 'Updata name' });
+    return res.status(400).send({ message: 'Provide name' });
   }
 
-  const newRoom = roomsService.create(name);
+  const updatedRoom = await roomsService.update({
+    id,
+    name,
+  });
 
-  return res.status(201).json(newRoom);
+  return res.status(200).json(updatedRoom);
 };
 
-const deletedRoomById = (req, res) => {
+const deletedRoomById = async (req, res) => {
   const { id } = req.params;
-  const deletedRoom = deleteById(+id); //Знайти кімнату за ID
+  console.log('id', id);
+  const deletedRoom = await roomsService.deleteById(id); //Знайти кімнату за ID
 
   if (!deletedRoom) {
     return res.status(404).json({ message: 'Room not found' });
   }
 
-  res.json(deletedRoom);
+  return res.status(200).json(deletedRoom);
 };
 
 export const roomsController = {
   getAll,
   getById,
-  create,
+  createRoom,
   deletedRoomById,
-  upDate,
+  upDateRoom,
 };

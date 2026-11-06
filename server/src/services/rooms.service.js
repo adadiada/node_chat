@@ -1,3 +1,5 @@
+import { v4 as uuid } from 'uuid';
+
 let rooms = [];
 
 const getAll = () => {
@@ -9,12 +11,12 @@ const getById = (id) => {
   return rooms.find((room) => room.id === +id) || null;
 };
 
-const createRoom = async ({ name, userName }) => {
+const createRoom = async ({ name }) => {
+  console.log('name', name);
   const room = {
-    id: Date.now(),
+    id: uuid(),
     name,
     messages: [],
-    userName,
   };
 
   rooms.push(room);
@@ -32,17 +34,20 @@ const deleteById = (id) => {
   return room;
 };
 
-export function update({ id, room }) {
+const update = async ({ id, name }) => {
   const roomUpdate = rooms.find((r) => r.id === id);
 
-  if (!roomUpdate) return;
+  if (!roomUpdate) {
+    return;
+  }
 
-  return Object.assign(roomUpdate, { room });
-}
+  return await Object.assign(roomUpdate, { name });
+};
 
 export const roomsService = {
   getAll,
   getById,
   createRoom,
   deleteById,
+  update,
 };
